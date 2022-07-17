@@ -1,0 +1,188 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #ffdcae;
+  font-family: sans-serif;
+}
+
+/* Main Heading */
+#h-div {
+  width: 50%;
+  min-width: 200px;
+  margin: 25px auto;
+  text-align: center;
+  border: 1px solid white;
+  background-color: #adcf9f;
+  border-radius: 20px;
+  animation: fadeIn 2s;
+}
+#h-div:hover {
+  background-color: #76ba99;
+}
+
+#heading {
+  color: white;
+  text-transform: uppercase;
+}
+
+#h-div i {
+  color: yellow;
+}
+
+#task-heading i {
+  color: yellow;
+  font-size: 30px;
+}
+
+/* Container */
+#container {
+  display: flex;
+  width: 50%;
+  min-width: 300px;
+  margin: auto 25%;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #adcf9f;
+  border-radius: 20px;
+  animation: fadeIn 2s;
+}
+/* form / todo task input */
+form {
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+form .description-div {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 10px 0;
+  /* padding: 5px; */
+}
+
+.description-div > label {
+  margin: 0 5px;
+  font-size: 20px;
+  text-transform: uppercase;
+  color: #3d3d3d;
+}
+
+/* add button */
+#add-btn {
+  width: 100px;
+  height: 35px;
+  font-size: 20px;
+  margin: 10px 0;
+  margin-bottom: 0;
+  border: 1px solid #76ba99;
+  border-radius: 20px;
+  background-color: #76ba99;
+  color: white;
+}
+
+#add-btn:hover {
+  border: 1px solid white;
+  box-shadow: 0 0 20px 5px #76ba99;
+}
+
+#todoText,
+#date,
+#category {
+  width: 200px;
+  height: 35px;
+  padding: 0 20px;
+  outline: none;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+}
+/* output div that display */
+
+#output-div {
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 15px;
+}
+
+#task-heading {
+  min-width: 200px;
+  text-align: center;
+  border: 1px solid white;
+  background-color: #adcf9f;
+  border-radius: 20px;
+  color: white;
+  text-transform: capitalize;
+  margin: -15px 0 0 0;
+}
+#task-heading:hover {
+  background-color: #76ba99;
+}
+
+#display {
+  width: 85%;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  align-items: center;
+  margin: -10px;
+}
+
+#des-div {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  margin: 10px;
+  color: rgb(66, 66, 66);
+  font-size: 16px;
+  text-transform: capitalize;
+  border: 2px solid #adcf9f;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#date-span {
+  font-size: 10px;
+  margin-top: 5px;
+  font-weight: bold;
+  color: grey;
+}
+#category-div {
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid white;
+  color: white;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+#delete-icon i {
+  color: red;
+}
