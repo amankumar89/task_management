@@ -1,8 +1,12 @@
 // libarary import
 const mongoose = require("mongoose");
 
+// uri
+const uri = 'mongodb+srv://amankumaroo784:amank784@cluster0.3ba1r6o.mongodb.net/?retryWrites=true&w=majority';
+
+
 // connect to the database
-mongoose.connect("mongodb://localhost/todo_app_db");
+mongoose.connect(uri);
 
 // aquaring the connection
 const db = mongoose.connection;
