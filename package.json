@@ -2,10 +2,11 @@
   "name": "todo_app",
   "version": "1.0.0",
   "description": "todo app using nodejs, express and mongodb and ejs as view engine",
-  "main": "index.js",
+  "main": "backend/index.js",
+  "type": "module",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "Aman Kumar",
   "license": "ISC",
