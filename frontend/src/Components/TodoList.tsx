@@ -1,7 +1,6 @@
-import { Table, Flex, Tag } from 'antd';
-import Icons from '../../public/Icons';
+import { Table, Flex, Tag, Tooltip } from 'antd';
+import Icons from '../../Icons';
 
-// Sample data
 const data = [
   {
     key: '1',
@@ -15,10 +14,9 @@ const data = [
     date: '2024-09-16',
     category: 'Category 2',
   },
-  // Add more data as needed
 ];
 
-const columns = [
+const columns: any = [
   {
     title: 'Title',
     dataIndex: 'title',
@@ -33,19 +31,29 @@ const columns = [
     title: 'Category',
     dataIndex: 'category',
     key: 'category',
-    render: (text: string) => <Tag color='blue-inverse'>{text}</Tag>
+    render: (text: string) => <Tag color='blue'>{text}</Tag>
   },
   {
     title: 'Action',
     key: 'action',
     align: 'center',
     render: () => (
-      <Flex gap={4} justify="center">
+      <Flex gap={8} justify="center" wrap>
         <button type='button'>
-          <img src={Icons.DeleteIcon} alt="delete-icon" />
+          <Tooltip title="Delete">
+            <img 
+              src={Icons.DeleteIcon}
+              alt="delete-icon"
+            />
+          </Tooltip>
         </button>
         <button type="button">
-          <img src={Icons.PencilIcon} alt="edit-icon" />
+          <Tooltip title="Edit">
+            <img
+              src={Icons.PencilIcon}
+              alt="edit-icon"
+            />
+          </Tooltip>
         </button>
       </Flex>
     ),
@@ -53,7 +61,12 @@ const columns = [
 ];
 
 const TodoList = () => (
-  <Table columns={columns} dataSource={data} />
+  <Table
+    title={() => "Todo List"}
+    columns={columns}
+    dataSource={data} 
+    bordered
+  />
 );
 
 export default TodoList;
