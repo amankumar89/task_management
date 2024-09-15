@@ -1,72 +1,83 @@
-import { Table, Flex, Tag, Tooltip } from 'antd';
-import Icons from '../../Icons';
+import { FC } from 'react';
+import { Table, Flex, Tag, Tooltip, TableColumnProps, Button } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DataProps, TodoListProps } from '../types';
 
-const data = [
-  {
-    key: '1',
-    title: 'Sample Title 1',
-    date: '2024-09-15',
-    category: 'Category 1',
-  },
-  {
-    key: '2',
-    title: 'Sample Title 2',
-    date: '2024-09-16',
-    category: 'Category 2',
-  },
-];
+const TodoList: FC<TodoListProps> = ({
+data = [],
+onAdd,
+onEdit,
+onDelete
+}) => {
+  const columns: TableColumnProps<DataProps>[] = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
+      align: 'center',
+      render: (text: string) => <Tag color='blue'>{text}</Tag>
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      align: 'center',
+      width: 200,
+      render: (record: DataProps) => (
+        <Flex gap={8} justify="center" wrap>
+          <button
+            type="button"
+            className='py-2 px-3 rounded hover:bg-green-100'
+            onClick={() => onEdit(record)}
+          >
+            <Tooltip title="Edit">
+              <EditOutlined style={{ color: 'green', fontSize: 18 }} />
+            </Tooltip>
+          </button>
+          <button
+            type='button'
+            className='py-2 px-3 rounded hover:bg-red-100'
+            onClick={() => onDelete(record)}
+          >
+            <Tooltip title="Delete">
+              <DeleteOutlined style={{ color: 'red', fontSize: 18 }} />
+            </Tooltip>
+          </button>
+        </Flex>
+      ),
+    },
+  ];
 
-const columns: any = [
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: 'Date',
-    dataIndex: 'date',
-    key: 'date',
-  },
-  {
-    title: 'Category',
-    dataIndex: 'category',
-    key: 'category',
-    render: (text: string) => <Tag color='blue'>{text}</Tag>
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    align: 'center',
-    render: () => (
-      <Flex gap={8} justify="center" wrap>
-        <button type='button'>
-          <Tooltip title="Delete">
-            <img 
-              src={Icons.DeleteIcon}
-              alt="delete-icon"
-            />
-          </Tooltip>
-        </button>
-        <button type="button">
-          <Tooltip title="Edit">
-            <img
-              src={Icons.PencilIcon}
-              alt="edit-icon"
-            />
-          </Tooltip>
-        </button>
-      </Flex>
-    ),
-  },
-];
-
-const TodoList = () => (
-  <Table
-    title={() => "Todo List"}
-    columns={columns}
-    dataSource={data} 
-    bordered
-  />
-);
+  return (
+    <div className='w-2/3 py-4'>
+      <Table
+        title={() => (
+          <div className='flex justify-between'>
+            <div className='text-3xl pl-2'>Todo List</div>
+            <div>
+              <Button type='primary'>
+                <span>Add Task</span>
+                <PlusOutlined />
+              </Button>
+            </div>
+          </div>
+        )}
+        columns={columns}
+        dataSource={data} 
+        bordered
+        rowKey="id"
+      />
+    </div>
+  );
+}
 
 export default TodoList;
