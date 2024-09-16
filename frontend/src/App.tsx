@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import TodoList from './Components/TodoList';
 import TodoModal from './Components/TodoModal';
 import { DataProps } from './types';
@@ -19,12 +19,18 @@ const data: DataProps[] = [
 ];
 
 const App:FC = () => {
+  const [modal, setModal] = useState<boolean>(false);
+
+  const closeModal = () => {
+    setModal(false);
+  };
+
   return (
     <div className='w-screen h-screen flex justify-center'>
-      <TodoModal />
+      <TodoModal open={modal} />
       <TodoList
         data={data}
-        onAdd={() => {}}
+        onAdd={() => setModal(true)}
         onEdit={() => {}}
         onDelete={() => {}}
       />

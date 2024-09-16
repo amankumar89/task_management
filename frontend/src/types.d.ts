@@ -1,3 +1,5 @@
+import { ModalProps } from "antd";
+
 export type DataProps = {
   id: string | number;
   title: string;

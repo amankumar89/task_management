@@ -64,7 +64,7 @@ onDelete
           <div className='flex justify-between'>
             <div className='text-3xl pl-2'>Todo List</div>
             <div>
-              <Button type='primary'>
+              <Button type='primary' onClick={onAdd}>
                 <span>Add Task</span>
                 <PlusOutlined />
               </Button>
