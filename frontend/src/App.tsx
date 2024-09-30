@@ -28,8 +28,10 @@ const INITIAL_MODAL = {
 const App: FC = () => {
   const [modal, setModal] = useState<ModalsProps>(INITIAL_MODAL);
 
-  const openModal = (data?: any) => {
-    setModal(() => ({ isOpen: true, data: {} }));
+  const openModal = (data?: DataProps) => {
+    console.log("ttttt", data);
+
+    setModal(() => ({ isOpen: true, data }));
   };
 
   const closeModal = () => {
@@ -38,7 +40,7 @@ const App: FC = () => {
 
   return (
     <div className="w-screen h-screen flex justify-center">
-      <TodoModal open={modal?.isOpen} onCancel={closeModal} />
+      <TodoModal open={modal?.isOpen} onCancel={closeModal} width={650} />
       <TodoList
         data={data}
         onAdd={openModal}

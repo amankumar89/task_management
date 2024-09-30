@@ -57,14 +57,19 @@ const TodoList: FC<TodoListProps> = ({
     },
   ];
 
+  const rowSelections = {
+    selectedRowKeys: data?.filter((i) => i.isCompleted)?.map((i) => i?.id),
+    onChange: () => {},
+  };
+
   return (
     <div className="w-2/3 py-4">
       <Table
         title={() => (
           <div className="flex justify-between">
-            <div className="text-3xl pl-2">Todo List</div>
+            <div className="text-3xl pl-2">Todo List App</div>
             <div>
-              <Button type="primary" onClick={onAdd}>
+              <Button type="primary" onClick={() => onAdd()}>
                 <span>Add Task</span>
                 <PlusOutlined />
               </Button>
@@ -75,10 +80,7 @@ const TodoList: FC<TodoListProps> = ({
         dataSource={data}
         bordered
         rowKey="id"
-        rowSelection={{
-          selectedRowKeys: data?.map((i) => i?.id),
-          onChange: () => {},
-        }}
+        rowSelection={rowSelections}
       />
     </div>
   );
