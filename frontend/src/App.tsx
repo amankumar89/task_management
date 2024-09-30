@@ -3,34 +3,22 @@ import TodoList from "./Components/TodoList";
 import TodoModal from "./Components/TodoModal";
 import { DataProps, ModalsProps } from "./types";
 
-const data: DataProps[] = [
-  {
-    id: "1",
-    title: "Sample Title 1",
-    date: "2024-09-15",
-    category: "Category 1",
-    isCompleted: false,
-  },
-  {
-    id: "2",
-    title: "Sample Title 2",
-    date: "2024-09-16",
-    category: "Category 2",
-    isCompleted: false,
-  },
-];
-
 const INITIAL_MODAL = {
   isOpen: false,
-  data: {},
+  data: {
+    id: "",
+    title: "",
+    date: "",
+    category: "",
+    isCompleted: false,
+  },
 };
 
 const App: FC = () => {
+  const [data, setData] = useState<DataProps[]>([]);
   const [modal, setModal] = useState<ModalsProps>(INITIAL_MODAL);
 
   const openModal = (data?: DataProps) => {
-    console.log("ttttt", data);
-
     setModal(() => ({ isOpen: true, data }));
   };
 
@@ -38,14 +26,30 @@ const App: FC = () => {
     setModal(INITIAL_MODAL);
   };
 
+  const handleSave = (data: DataProps) => {
+    const tempData = data?.id ? data : { ...data, id: Date.now() };
+    setData((prev) => [...prev, tempData]);
+    closeModal();
+  };
+
+  const handleDelete = (data: DataProps) => {
+    setData((prev) => prev.filter((item) => item.id !== data.id));
+  };
+
   return (
     <div className="w-screen h-screen flex justify-center">
-      <TodoModal open={modal?.isOpen} onCancel={closeModal} width={650} />
+      <TodoModal
+        open={modal?.isOpen}
+        data={modal?.data}
+        onCancel={closeModal}
+        onSave={handleSave}
+        width={650}
+      />
       <TodoList
         data={data}
         onAdd={openModal}
         onEdit={openModal}
-        onDelete={() => {}}
+        onDelete={handleDelete}
       />
     </div>
   );

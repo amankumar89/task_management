@@ -8,6 +8,7 @@ import {
   Flex,
   Divider,
   Select,
+  message,
 } from "antd";
 import dayjs from "dayjs";
 import { TodoModalProps } from "../types";
@@ -30,42 +31,51 @@ const CATEGORY_LISTS = [
 ];
 
 const INITIAL_VALUES = {
+  id: null,
   title: null,
   date: null,
   category: null,
   isCompleted: false,
 };
 
-const TodoModal: FC<TodoModalProps> = ({ open, data, ...restProps }) => {
+const TodoModal: FC<TodoModalProps> = ({
+  open,
+  data,
+  onSave,
+  ...restProps
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (open && data && Object.keys(data)?.length) {
-      console.log("tttt", data);
-
       form.setFieldsValue({
-        title: "dummy",
-        date: dayjs(),
-        category: "Other",
+        ...INITIAL_VALUES,
+        ...(data ?? {}),
+        date: dayjs(data?.date),
       });
+    } else {
+      form.resetFields();
     }
   }, [open]);
-  console.log("ttttt", form.getFieldsValue());
 
   const onFinish = (values: any) => {
-    console.log("Form values:", values);
+    onSave({
+      ...values,
+      date: values?.date?.format("YYYY-MM-DD"),
+      isCompleted: false,
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    message.error("Please fill required fields!");
   };
 
   return (
     <Modal open={open} centered title="Add Task" footer={null} {...restProps}>
       <Form
         form={form}
-        name="myForm"
-        // layout="vertical"
+        name="task-form"
+        layout="vertical"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         initialValues={INITIAL_VALUES}

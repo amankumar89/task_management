@@ -1,5 +1,13 @@
 import { FC } from "react";
-import { Table, Flex, Tag, Tooltip, TableColumnProps, Button } from "antd";
+import {
+  Table,
+  Flex,
+  Tag,
+  Tooltip,
+  TableColumnProps,
+  Button,
+  Switch,
+} from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { DataProps, TodoListProps } from "../types";
 
@@ -26,6 +34,13 @@ const TodoList: FC<TodoListProps> = ({
       key: "category",
       align: "center",
       render: (text: string) => <Tag color="blue">{text}</Tag>,
+    },
+    {
+      title: "Status",
+      dataIndex: "isCompleted",
+      key: "category",
+      align: "center",
+      render: (value: boolean) => <Switch checked={value} />,
     },
     {
       title: "Action",
@@ -57,10 +72,10 @@ const TodoList: FC<TodoListProps> = ({
     },
   ];
 
-  const rowSelections = {
-    selectedRowKeys: data?.filter((i) => i.isCompleted)?.map((i) => i?.id),
-    onChange: () => {},
-  };
+  // const rowSelections = {
+  //   selectedRowKeys: data?.filter((i) => i.isCompleted)?.map((i) => i?.id),
+  //   onChange: () => {},
+  // };
 
   return (
     <div className="w-2/3 py-4">
@@ -80,7 +95,12 @@ const TodoList: FC<TodoListProps> = ({
         dataSource={data}
         bordered
         rowKey="id"
-        rowSelection={rowSelections}
+        // rowSelection={rowSelections}
+        pagination={{
+          pageSize: 10,
+          total: data?.length,
+          showSizeChanger: false,
+        }}
       />
     </div>
   );

@@ -10,7 +10,7 @@ export type DataProps = {
 
 export type ModalsProps = {
   isOpen: boolean;
-  data?: {};
+  data?: DataProps;
 };
 
 export type TodoListProps = {
@@ -23,4 +23,5 @@ export type TodoListProps = {
 export type TodoModalProps = ModalProps & {
   open: boolean;
   data?: DataProps;
+  onSave: (data: DataProps) => void;
 };
