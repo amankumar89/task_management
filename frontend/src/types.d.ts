@@ -5,6 +5,12 @@ export type DataProps = {
   title: string;
   date: string;
   category: string;
+  isCompleted: boolean;
+};
+
+export type ModalsProps = {
+  isOpen: boolean;
+  data?: {};
 };
 
 export type TodoListProps = {
@@ -14,4 +20,7 @@ export type TodoListProps = {
   onDelete: (data: DataProps) => void;
 };
 
-export type TodoModalProps = ModalProps & {};
+export type TodoModalProps = ModalProps & {
+  open: boolean;
+  data?: DataProps;
+};
