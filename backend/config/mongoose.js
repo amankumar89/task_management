@@ -3,17 +3,15 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   const uri = process.env.MONGO_URI;
-  // connect to the database
-  await mongoose.connect(uri);
-  
-  // aquaring the connection
-  const db = await mongoose.connection;
-  
-  // error printing if any
-  db.on("error", console.error.bind(console, "connection error : "));
-  
-  // db up and running
-  db.once("open", function () {
-    console.log("connected to database");
-  });
+  mongoose
+    .connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("database connected successfully");
+    })
+    .catch((err) => {
+      console.error("database connection error:", err);
+    });
 };

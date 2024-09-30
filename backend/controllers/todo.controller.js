@@ -19,9 +19,10 @@ export const getAllTodo = async (req, res) => {
 export const createTodo = async (req, res) => {
   try {
     const newTodoTask = await Todo.create({
-      descriptions: req.body.todoText,
+      title: req.body.title,
       date: req.body.date,
       category: req.body.category,
+      isCompleted: req.body.isCompleted,
     });
     return res.status(201).json({
       success: true,
