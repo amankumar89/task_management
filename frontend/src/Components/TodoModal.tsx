@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import dayjs from "dayjs";
-import { TodoModalProps } from "../types";
+import { DataProps, TodoModalProps } from "../types";
 
 const CATEGORY_LISTS = [
   { value: "work", label: "Work" },
@@ -56,17 +56,17 @@ const TodoModal: FC<TodoModalProps> = ({
     } else {
       form.resetFields();
     }
-  }, [open]);
+  }, [open, data, form]);
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: DataProps) => {
     onSave({
       ...values,
-      date: values?.date?.format("YYYY-MM-DD"),
+      date: dayjs(values?.date)?.format("YYYY-MM-DD"),
       isCompleted: false,
     });
   };
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = () => {
     message.error("Please fill required fields!");
   };
 
