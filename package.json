@@ -5,9 +5,9 @@
   "main": "backend/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
-    "build": "",
-    "start": "node index.js"
+    "dev": "NODE_ENV=development nodemon index.js",
+    "start": "NODE_ENV=production node backend/index.js",
+    "build": "npm i && npm i --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Aman Kumar",
   "license": "ISC",

@@ -17,9 +17,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/todo", todoRoutes);
 
-app.get("*", (req, res) => {
-  return res.sendFile(path.join(path.resolve(), "frontend/dist", "index.html"));
-});
+if (process.env.NODE_ENV === "production") {
+  const currPath = path.join(path.resolve(), "frontend/dist");
+  app.use(express.static(currPath));
+  app.get("*", (req, res) => {
+    return res.sendFile(path.join(currPath, "index.html"));
+  });
+}
 
 // listening to port if any error occured prints it
 app.listen(PORT, function (err) {
