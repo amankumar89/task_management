@@ -14,6 +14,7 @@ export type ModalsProps = {
 };
 
 export type TodoListProps = {
+  loading?: boolean;
   data: DataProps[];
   onAdd: () => void;
   onEdit: (data: DataProps) => void;

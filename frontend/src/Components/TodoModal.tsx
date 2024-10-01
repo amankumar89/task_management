@@ -14,20 +14,20 @@ import dayjs from "dayjs";
 import { DataProps, TodoModalProps } from "../types";
 
 const CATEGORY_LISTS = [
-  { value: "work", label: "Work" },
-  { value: "personal_development", label: "Personal Development" },
-  { value: "fitness", label: "Fitness" },
-  { value: "household", label: "Household Chores" },
-  { value: "social", label: "Social" },
-  { value: "finance", label: "Finance & Budgeting" },
-  { value: "hobbies", label: "Hobbies" },
-  { value: "self_care", label: "Self-care" },
-  { value: "errands", label: "Errands" },
-  { value: "shopping", label: "Shopping" },
-  { value: "travel", label: "Travel & Planning" },
-  { value: "learning", label: "Learning" },
-  { value: "health", label: "Health" },
-  { value: "other", label: "Other" },
+  { value: "Work", label: "Work" },
+  { value: "Personal Development", label: "Personal Development" },
+  { value: "Fitness", label: "Fitness" },
+  { value: "Household Chores", label: "Household Chores" },
+  { value: "Social", label: "Social" },
+  { value: "Finance", label: "Finance & Budgeting" },
+  { value: "Hobbies", label: "Hobbies" },
+  { value: "Self Care", label: "Self-care" },
+  { value: "Errands", label: "Errands" },
+  { value: "Shopping", label: "Shopping" },
+  { value: "Travel", label: "Travel & Planning" },
+  { value: "Learning", label: "Learning" },
+  { value: "Health", label: "Health" },
+  { value: "Other", label: "Other" },
 ];
 
 const INITIAL_VALUES = {
