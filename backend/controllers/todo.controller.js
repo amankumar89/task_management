@@ -1,8 +1,9 @@
 import Todo from "../models/todo.model.js";
+import { getNextSequenceValue } from "../models/counter.model.js";
 
 export const getAllTodo = async (req, res) => {
   try {
-    const todoList = await Todo.find({});
+    const todoList = await Todo.find({}).sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
       data: todoList,
@@ -18,7 +19,8 @@ export const getAllTodo = async (req, res) => {
 
 export const createTodo = async (req, res) => {
   try {
-    const newTodoTask = await Todo.create({
+    const newTodo = await Todo.create({
+      id: await getNextSequenceValue(),
       title: req.body.title,
       date: req.body.date,
       category: req.body.category,
@@ -26,8 +28,15 @@ export const createTodo = async (req, res) => {
     });
     return res.status(201).json({
       success: true,
-      message: "Todo created successfully",
-      data: newTodoTask,
+      message: "Create todo successfully",
+      data: {
+        id: newTodo?.id,
+        title: newTodo?.title,
+        date: newTodo?.date,
+        category: newTodo?.category,
+        isCompleted: newTodo?.isCompleted,
+        createdAt: newTodo?.createdAt,
+      },
     });
   } catch (error) {
     console.log(`Error in creating new task: ${error}`);
@@ -40,8 +49,8 @@ export const createTodo = async (req, res) => {
 
 export const deleteTodo = async (req, res) => {
   try {
-    const id = req.query.id;
-    await Todo.findByIdAndDelete(id);
+    const id = req.params.id || req.params._id;
+    await Todo.deleteOne({ _id: id });
     return res.status(200).json({
       success: true,
       message: "Todo deleted successfully",
