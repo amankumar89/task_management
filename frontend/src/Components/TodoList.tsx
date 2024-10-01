@@ -1,5 +1,6 @@
 import { FC } from "react";
 import {
+  Input,
   Table,
   Flex,
   Tag,
@@ -10,8 +11,10 @@ import {
 } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { DataProps, TodoListProps } from "../types";
+import dayjs from "dayjs";
 
 const TodoList: FC<TodoListProps> = ({
+  loading,
   data = [],
   onAdd,
   onEdit,
@@ -27,6 +30,7 @@ const TodoList: FC<TodoListProps> = ({
       title: "Date",
       dataIndex: "date",
       key: "date",
+      render: (text: string) => (text ? dayjs(text).format("YYYY-MM-DD") : "-"),
     },
     {
       title: "Category",
@@ -82,7 +86,7 @@ const TodoList: FC<TodoListProps> = ({
       <Table
         title={() => (
           <div className="flex justify-between">
-            <div className="text-3xl pl-2">Todo List App</div>
+            <Input.Search placeholder="Search task..." className="w-1/2" />
             <div>
               <Button type="primary" onClick={() => onAdd()}>
                 <span>Add Task</span>
@@ -101,6 +105,7 @@ const TodoList: FC<TodoListProps> = ({
           total: data?.length,
           showSizeChanger: false,
         }}
+        loading={loading}
       />
     </div>
   );

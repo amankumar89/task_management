@@ -1,7 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import TodoList from "./Components/TodoList";
 import TodoModal from "./Components/TodoModal";
 import { DataProps, ModalsProps } from "./types";
+import axios from "axios";
 
 const INITIAL_MODAL = {
   isOpen: false,
@@ -17,7 +18,20 @@ const INITIAL_MODAL = {
 const App: FC = () => {
   const [data, setData] = useState<DataProps[]>([]);
   const [modal, setModal] = useState<ModalsProps>(INITIAL_MODAL);
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const fetchData = async () => {
+    setLoading(true);
+    const res = await axios.get("/api/v1/todo");
+    if (res?.data?.success) {
+      setData(res?.data?.data ?? []);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   const openModal = (data?: DataProps) => {
     setModal(() => ({ isOpen: true, data }));
   };
@@ -26,14 +40,23 @@ const App: FC = () => {
     setModal(INITIAL_MODAL);
   };
 
-  const handleSave = (data: DataProps) => {
-    const tempData = data?.id ? data : { ...data, id: Date.now() };
-    setData((prev) => [...prev, tempData]);
+  const handleSave = async (data: DataProps) => {
+    setLoading(true);
+    const res = await axios.post("/api/v1/todo/create", data);
+    if (res?.data?.success) {
+      fetchData();
+    }
     closeModal();
   };
 
-  const handleDelete = (data: DataProps) => {
-    setData((prev) => prev.filter((item) => item.id !== data.id));
+  const handleDelete = async (data: DataProps) => {
+    setLoading(true);
+    const res = await axios.delete(
+      `/api/v1/delete-todo/${data?.id || data?._id}`
+    );
+    if (res?.data?.success) {
+      fetchData();
+    }
   };
 
   return (
@@ -46,6 +69,7 @@ const App: FC = () => {
         width={650}
       />
       <TodoList
+        loading={loading}
         data={data}
         onAdd={openModal}
         onEdit={openModal}
