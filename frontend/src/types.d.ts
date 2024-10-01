@@ -1,11 +1,12 @@
 import { ModalProps } from "antd";
 
 export type DataProps = {
-  id: string | number;
+  id: number | null;
   title: string;
   date: string;
   category: string;
   isCompleted: boolean;
+  description: string;
 };
 
 export type ModalsProps = {

@@ -51,9 +51,7 @@ const App: FC = () => {
 
   const handleDelete = async (data: DataProps) => {
     setLoading(true);
-    const res = await axios.delete(
-      `/api/v1/delete-todo/${data?.id || data?._id}`
-    );
+    const res = await axios.delete(`/api/v1/delete-todo/${data?.id}`);
     if (res?.data?.success) {
       fetchData();
     }

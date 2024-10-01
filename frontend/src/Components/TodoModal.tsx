@@ -30,11 +30,12 @@ const CATEGORY_LISTS = [
   { value: "Other", label: "Other" },
 ];
 
-const INITIAL_VALUES = {
+const INITIAL_VALUES: DataProps = {
   id: null,
-  title: null,
-  date: null,
-  category: null,
+  title: "",
+  description: "",
+  date: "",
+  category: "",
   isCompleted: false,
 };
 
@@ -91,6 +92,18 @@ const TodoModal: FC<TodoModalProps> = ({
           ]}
         >
           <Input placeholder="Enter the task title..." />
+        </Form.Item>
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[
+            {
+              required: true,
+              message: "Please fill task description!",
+            },
+          ]}
+        >
+          <Input.TextArea placeholder="Enter the task decription..." />
         </Form.Item>
         <Form.Item
           label="Category"

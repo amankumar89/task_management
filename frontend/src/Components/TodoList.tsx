@@ -8,10 +8,19 @@ import {
   TableColumnProps,
   Button,
   Switch,
+  Row,
+  Col,
+  Select,
 } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { DataProps, TodoListProps } from "../types";
 import dayjs from "dayjs";
+
+const formatOptions = (data: string[]) =>
+  data?.map((i) => ({
+    value: i,
+    label: i,
+  }));
 
 const TodoList: FC<TodoListProps> = ({
   loading,
@@ -27,8 +36,14 @@ const TodoList: FC<TodoListProps> = ({
       key: "title",
     },
     {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
       title: "Date",
       dataIndex: "date",
+      align: "center",
       key: "date",
       render: (text: string) => (text ? dayjs(text).format("YYYY-MM-DD") : "-"),
     },
@@ -76,30 +91,50 @@ const TodoList: FC<TodoListProps> = ({
     },
   ];
 
-  // const rowSelections = {
-  //   selectedRowKeys: data?.filter((i) => i.isCompleted)?.map((i) => i?.id),
-  //   onChange: () => {},
-  // };
+  const categoryOptions = formatOptions([
+    ...new Set(data?.map((item) => item?.category)),
+  ]);
 
   return (
-    <div className="w-2/3 py-4">
+    <div className="w-full p-4">
       <Table
         title={() => (
-          <div className="flex justify-between">
-            <Input.Search placeholder="Search task..." className="w-1/2" />
-            <div>
+          <Row align="middle" justify="space-between">
+            <Col span={8}>
+              <Input.Search placeholder="Search task..." className="" />
+            </Col>
+            <Col span={4}>
+              <Select
+                options={categoryOptions}
+                placeholder="Filter by Category"
+                className="w-full"
+                allowClear
+                onSelect={() => {}}
+                onClear={() => {}}
+              />
+            </Col>
+            <Col span={4}>
+              <Select
+                options={formatOptions(["Completed", "Incomplete"])}
+                placeholder="Filter by Status"
+                className="w-full"
+                allowClear
+                onSelect={() => {}}
+                onClear={() => {}}
+              />
+            </Col>
+            <Col>
               <Button type="primary" onClick={() => onAdd()}>
                 <span>Add Task</span>
                 <PlusOutlined />
               </Button>
-            </div>
-          </div>
+            </Col>
+          </Row>
         )}
         columns={columns}
         dataSource={data}
         bordered
         rowKey="id"
-        // rowSelection={rowSelections}
         pagination={{
           pageSize: 10,
           total: data?.length,
