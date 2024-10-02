@@ -3,18 +3,21 @@ import {
   createTodo,
   deleteTodo,
   getAllTodo,
+  updateTodo,
 } from "../controllers/todo.controller.js";
-import { todosValidations, validate } from "../lib/validators.js";
 
 const router = express.Router();
 
-// get method to fetch and return all todo list items
-router.get("/", getAllTodo);
+// Route to create a new todo
+router.post("/todo", createTodo);
 
-// post method for adding todo tasks in database
-router.post("/create", todosValidations(), validate, createTodo);
+// Route to get all todos with pagination
+router.get("/todo", getAllTodo);
 
-// delete task by click on the delete btn
-router.delete("/delete-todo/:id", deleteTodo);
+// Route to update a todo by ID
+router.put("/todo/:id", updateTodo);
+
+// Route to delete a todo by ID
+router.delete("/todo/:id", deleteTodo);
 
 export default router;
