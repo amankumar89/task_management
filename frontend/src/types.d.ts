@@ -20,6 +20,7 @@ export type TodoListProps = {
   onAdd: () => void;
   onEdit: (data: DataProps) => void;
   onDelete: (data: DataProps) => void;
+  onStatusChange: (data: DataProps) => void;
 };
 
 export type TodoModalProps = ModalProps & {

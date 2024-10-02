@@ -28,6 +28,7 @@ const TodoList: FC<TodoListProps> = ({
   onAdd,
   onEdit,
   onDelete,
+  onStatusChange,
 }) => {
   const columns: TableColumnProps<DataProps>[] = [
     {
@@ -59,7 +60,12 @@ const TodoList: FC<TodoListProps> = ({
       dataIndex: "isCompleted",
       key: "category",
       align: "center",
-      render: (value: boolean) => <Switch checked={value} />,
+      render: (value: boolean, record: DataProps) => (
+        <Switch
+          checked={value}
+          onClick={() => onStatusChange({ ...record, isCompleted: !value })}
+        />
+      ),
     },
     {
       title: "Action",

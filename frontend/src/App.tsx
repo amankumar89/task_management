@@ -75,6 +75,7 @@ const App: FC = () => {
         onAdd={openModal}
         onEdit={openModal}
         onDelete={handleDelete}
+        onStatusChange={handleSave}
       />
     </div>
   );
