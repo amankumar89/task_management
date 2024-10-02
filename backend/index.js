@@ -17,23 +17,7 @@ app.set("trust proxy", true);
 // Enable CORS
 app.use(cors());
 
-// Configuration object for different environments
-const config = {
-  development: {
-    BASE_URL: `http://localhost:${PORT}`,
-  },
-  production: {
-    BASE_URL:
-      process.env.BASE_URL ||
-      "https://todo-app-git-main-amankumar89s-projects.vercel.app",
-  },
-};
-
-// Determine current environment
-const currentConfig =
-  process.env.NODE_ENV === "production"
-    ? config.production
-    : config.development;
+app.use(express.static(path.join(path.resolve(), "frontend/dist")));
 
 // urlencoded for the post method
 app.use(express.json());
