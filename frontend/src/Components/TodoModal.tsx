@@ -64,6 +64,7 @@ const TodoModal: FC<TodoModalProps> = ({
       ...values,
       date: dayjs(values?.date)?.format("YYYY-MM-DD"),
       isCompleted: false,
+      id: data?.id ?? null,
     });
   };
 

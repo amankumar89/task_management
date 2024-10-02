@@ -7,8 +7,9 @@ import axios from "axios";
 const INITIAL_MODAL = {
   isOpen: false,
   data: {
-    id: "",
+    id: null,
     title: "",
+    description: "",
     date: "",
     category: "",
     isCompleted: false,
@@ -24,7 +25,7 @@ const App: FC = () => {
     setLoading(true);
     const res = await axios.get("/api/v1/todo");
     if (res?.data?.success) {
-      setData(res?.data?.data ?? []);
+      setData(res?.data?.data?.rows ?? []);
     }
     setLoading(false);
   };
@@ -41,8 +42,9 @@ const App: FC = () => {
   };
 
   const handleSave = async (data: DataProps) => {
-    setLoading(true);
-    const res = await axios.post("/api/v1/todo/create", data);
+    const res = data?.id
+      ? await axios.put(`/api/v1/todo/${data?.id}`, data)
+      : await axios.post("/api/v1/todo", data);
     if (res?.data?.success) {
       fetchData();
     }
@@ -50,8 +52,7 @@ const App: FC = () => {
   };
 
   const handleDelete = async (data: DataProps) => {
-    setLoading(true);
-    const res = await axios.delete(`/api/v1/delete-todo/${data?.id}`);
+    const res = await axios.delete(`/api/v1/todo/${data?.id}`);
     if (res?.data?.success) {
       fetchData();
     }
@@ -59,13 +60,15 @@ const App: FC = () => {
 
   return (
     <div className="w-screen h-screen flex justify-center">
-      <TodoModal
-        open={modal?.isOpen}
-        data={modal?.data}
-        onCancel={closeModal}
-        onSave={handleSave}
-        width={650}
-      />
+      {modal?.isOpen && (
+        <TodoModal
+          open={modal?.isOpen}
+          data={modal?.data}
+          onCancel={closeModal}
+          onSave={handleSave}
+          width={650}
+        />
+      )}
       <TodoList
         loading={loading}
         data={data}
