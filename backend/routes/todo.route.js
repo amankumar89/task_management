@@ -9,15 +9,15 @@ import {
 const router = express.Router();
 
 // Route to create a new todo
-router.post("/todo", createTodo);
+router.post("/", createTodo);
 
 // Route to get all todos with pagination
-router.get("/todo", getAllTodo);
+router.get("/", getAllTodo);
 
 // Route to update a todo by ID
-router.put("/todo/:id", updateTodo);
+router.put("/:id", updateTodo);
 
 // Route to delete a todo by ID
-router.delete("/todo/:id", deleteTodo);
+router.delete("/:id", deleteTodo);
 
 export default router;

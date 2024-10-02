@@ -12,7 +12,7 @@ export const createTodo = async (req, res) => {
   }
 
   try {
-    const id = await getNextSequenceValue("todoId");
+    const id = await getNextSequenceValue();
 
     const newTodo = new Todo({
       id,
@@ -26,7 +26,7 @@ export const createTodo = async (req, res) => {
     await newTodo.save();
 
     const todo = await Todo.findOne({ id }).select(
-      "id title isCompleted description category"
+      "id title isCompleted description category -_id"
     );
 
     return res.status(201).json({ success: true, todo });
@@ -64,19 +64,21 @@ export const getAllTodo = async (req, res) => {
   const { page = 1, perPage = 10 } = req.query;
   try {
     const todo = await Todo.find()
-      .select("id title isCompleted description category")
       .sort({ createdAt: -1 }) // newest first
       .skip((page - 1) * perPage)
-      .limit(parseInt(perPage));
+      .limit(parseInt(perPage))
+      .select("id title isCompleted description category -_id");
 
     const totalTodos = await Todo.countDocuments();
 
     res.status(200).json({
       success: true,
       data: {
-        todo,
-        total: Math.ceil(totalTodos / perPage),
-        page: parseInt(page),
+        rows: todo,
+        meta: {
+          page: parseInt(page),
+          total: Math.ceil(totalTodos),
+        },
       },
     });
   } catch (err) {
