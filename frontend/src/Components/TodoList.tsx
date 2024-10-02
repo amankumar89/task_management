@@ -20,6 +20,24 @@ type PaginationProps = {
   current: number;
   total: number;
 };
+
+const COLORS: any = {
+  Work: "#1890ff",
+  "Personal Development": "#2db7f5",
+  Fitness: "#87d068",
+  "Household Chores": "#faad14",
+  Social: "#f50",
+  "Finance & Budgeting": "#722ed1",
+  Hobbies: "#13c2c2",
+  "Self-care": "#eb2f96",
+  Errands: "#fa8c16",
+  Shopping: "#52c41a",
+  "Travel & Planning": "#1890ff",
+  Learning: "#fadb14",
+  Health: "#73d13d",
+  Other: "#bfbfbf",
+};
+
 const formatOptions = (data: string[]) =>
   data?.map((i) => ({
     value: i,
@@ -64,7 +82,9 @@ const TodoList: FC<TodoListProps> = ({
       dataIndex: "category",
       key: "category",
       align: "center",
-      render: (text: string) => <Tag color="blue">{text}</Tag>,
+      render: (text: string) => (
+        <Tag color={COLORS?.[text] ?? "blue-inverse"}>{text}</Tag>
+      ),
     },
     {
       title: "Status",
