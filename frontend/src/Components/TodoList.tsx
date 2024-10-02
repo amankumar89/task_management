@@ -126,7 +126,16 @@ const TodoList: FC<TodoListProps> = ({
         title={() => (
           <Row align="middle" justify="space-between">
             <Col span={8}>
-              <Input.Search placeholder="Search task..." className="" />
+              <Input.Search
+                onSearch={(val) =>
+                  fetchData({
+                    searchText: val,
+                  })
+                }
+                placeholder="Search task..."
+                className=""
+                allowClear
+              />
             </Col>
             <Col span={4}>
               <Select
@@ -134,8 +143,14 @@ const TodoList: FC<TodoListProps> = ({
                 placeholder="Filter by Category"
                 className="w-full"
                 allowClear
-                onSelect={() => {}}
-                onClear={() => {}}
+                onSelect={(val) => {
+                  fetchData({
+                    category: val,
+                  });
+                }}
+                onClear={() => {
+                  fetchData({});
+                }}
               />
             </Col>
             <Col span={4}>
@@ -144,8 +159,14 @@ const TodoList: FC<TodoListProps> = ({
                 placeholder="Filter by Status"
                 className="w-full"
                 allowClear
-                onSelect={() => {}}
-                onClear={() => {}}
+                onSelect={(val) => {
+                  fetchData({
+                    status: val,
+                  });
+                }}
+                onClear={() => {
+                  fetchData({});
+                }}
               />
             </Col>
             <Col>
@@ -160,7 +181,10 @@ const TodoList: FC<TodoListProps> = ({
         dataSource={data?.rows}
         bordered
         rowKey="id"
-        pagination={pagination}
+        pagination={{
+          ...pagination,
+          total: data?.meta?.total,
+        }}
         loading={loading}
         onChange={handleTableChange}
       />

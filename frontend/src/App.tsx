@@ -29,6 +29,15 @@ const App: FC = () => {
       page: val?.page ?? 1,
       perPage: val?.perPage ?? 10,
     });
+    if (val?.searchText) {
+      params.append("title", val?.searchText);
+    }
+    if (val?.category) {
+      params.append("category", val?.category);
+    }
+    if (val?.status) {
+      params.append("status", val?.status);
+    }
     const res = await axios.get("/api/v1/todo", { params });
     if (res?.data?.success) {
       setRecord(res?.data?.data ?? []);

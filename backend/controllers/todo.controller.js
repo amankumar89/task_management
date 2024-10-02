@@ -61,9 +61,19 @@ export const updateTodo = async (req, res) => {
 };
 
 export const getAllTodo = async (req, res) => {
-  const { page = 1, perPage = 10 } = req.query;
+  const { page = 1, perPage = 10, title, category, status } = req.query;
   try {
-    const todo = await Todo.find()
+    const query = {};
+    if (title) {
+      query.title = { $regex: title, $options: "i" }; // case-insensitive search
+    }
+    if (category) {
+      query.category = category;
+    }
+    if (status) {
+      query.isCompleted = status === "Completed";
+    }
+    const todo = await Todo.find(query)
       .sort({ createdAt: -1 }) // newest first
       .skip((page - 1) * perPage)
       .limit(parseInt(perPage))
