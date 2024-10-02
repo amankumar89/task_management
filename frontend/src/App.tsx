@@ -16,7 +16,14 @@ const INITIAL_MODAL = {
   },
 };
 
+const BASE_URL = import.meta.env.DEV
+  ? "http://localhost:5000"
+  : `https://todo-app-snowy-theta-63.vercel.app`;
+
+const getUrl = (url: string) => `${BASE_URL}${url}`;
+
 const App: FC = () => {
+  // console.log("ttt", );
   const [record, setRecord] = useState<RecordProps>({
     rows: [],
   });
@@ -38,7 +45,7 @@ const App: FC = () => {
     if (val?.status) {
       params.append("status", val?.status);
     }
-    const res = await axios.get("/api/v1/todo", { params });
+    const res = await axios.get(getUrl("/api/v1/todo"), { params });
     if (res?.data?.success) {
       setRecord(res?.data?.data ?? []);
     }
@@ -59,8 +66,8 @@ const App: FC = () => {
 
   const handleSave = async (data: DataProps) => {
     const res = data?.id
-      ? await axios.put(`/api/v1/todo/${data?.id}`, data)
-      : await axios.post("/api/v1/todo", data);
+      ? await axios.put(getUrl(`/api/v1/todo/${data?.id}`), data)
+      : await axios.post(getUrl("/api/v1/todo"), data);
     if (res?.data?.success) {
       fetchData();
     }
@@ -68,7 +75,7 @@ const App: FC = () => {
   };
 
   const handleDelete = async (data: DataProps) => {
-    const res = await axios.delete(`/api/v1/todo/${data?.id}`);
+    const res = await axios.delete(getUrl(`/api/v1/todo/${data?.id}`));
     if (res?.data?.success) {
       fetchData();
     }
