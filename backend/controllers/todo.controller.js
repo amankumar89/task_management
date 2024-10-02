@@ -67,7 +67,7 @@ export const getAllTodo = async (req, res) => {
       .sort({ createdAt: -1 }) // newest first
       .skip((page - 1) * perPage)
       .limit(parseInt(perPage))
-      .select("id title isCompleted description category -_id");
+      .select("id date title isCompleted description category -_id");
 
     const totalTodos = await Todo.countDocuments();
 
