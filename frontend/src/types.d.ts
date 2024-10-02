@@ -1,12 +1,20 @@
 import { ModalProps } from "antd";
 
 export type DataProps = {
-  id: number | null;
+  id?: number | null;
   title: string;
   date: string;
   category: string;
-  isCompleted: boolean;
+  isCompleted?: boolean;
   description: string;
+};
+
+export type RecordProps = {
+  meta?: {
+    total: number;
+    page: number;
+  };
+  rows?: DataProps[];
 };
 
 export type ModalsProps = {
@@ -16,11 +24,12 @@ export type ModalsProps = {
 
 export type TodoListProps = {
   loading?: boolean;
-  data: DataProps[];
+  data: RecordProps;
   onAdd: () => void;
   onEdit: (data: DataProps) => void;
   onDelete: (data: DataProps) => void;
   onStatusChange: (data: DataProps) => void;
+  fetchData: (val: any) => void;
 };
 
 export type TodoModalProps = ModalProps & {

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   Input,
   Table,
@@ -15,7 +15,11 @@ import {
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { DataProps, TodoListProps } from "../types";
 import dayjs from "dayjs";
-
+type PaginationProps = {
+  pageSize: number;
+  current: number;
+  total: number;
+};
 const formatOptions = (data: string[]) =>
   data?.map((i) => ({
     value: i,
@@ -24,12 +28,19 @@ const formatOptions = (data: string[]) =>
 
 const TodoList: FC<TodoListProps> = ({
   loading,
-  data = [],
+  data,
   onAdd,
   onEdit,
   onDelete,
   onStatusChange,
+  fetchData,
 }) => {
+  const [pagination, setPagination] = useState<PaginationProps>({
+    pageSize: 10,
+    current: 1,
+    total: data?.meta?.total ?? 0,
+  });
+
   const columns: TableColumnProps<DataProps>[] = [
     {
       title: "Title",
@@ -98,8 +109,16 @@ const TodoList: FC<TodoListProps> = ({
   ];
 
   const categoryOptions = formatOptions([
-    ...new Set(data?.map((item) => item?.category)),
+    ...new Set(data?.rows?.map((item) => item?.category)),
   ]);
+
+  const handleTableChange = (pagination: any) => {
+    setPagination(pagination);
+    fetchData({
+      page: pagination?.current,
+      perPage: pagination?.pageSize,
+    });
+  };
 
   return (
     <div className="w-full p-4">
@@ -138,15 +157,12 @@ const TodoList: FC<TodoListProps> = ({
           </Row>
         )}
         columns={columns}
-        dataSource={data}
+        dataSource={data?.rows}
         bordered
         rowKey="id"
-        pagination={{
-          pageSize: 10,
-          total: data?.length,
-          showSizeChanger: false,
-        }}
+        pagination={pagination}
         loading={loading}
+        onChange={handleTableChange}
       />
     </div>
   );

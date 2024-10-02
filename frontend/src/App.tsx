@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import TodoList from "./Components/TodoList";
 import TodoModal from "./Components/TodoModal";
-import { DataProps, ModalsProps } from "./types";
+import { DataProps, ModalsProps, RecordProps } from "./types";
 import axios from "axios";
 
 const INITIAL_MODAL = {
@@ -17,15 +17,21 @@ const INITIAL_MODAL = {
 };
 
 const App: FC = () => {
-  const [data, setData] = useState<DataProps[]>([]);
+  const [record, setRecord] = useState<RecordProps>({
+    rows: [],
+  });
   const [modal, setModal] = useState<ModalsProps>(INITIAL_MODAL);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchData = async () => {
+  const fetchData = async (val?: any) => {
     setLoading(true);
-    const res = await axios.get("/api/v1/todo");
+    const params = new URLSearchParams({
+      page: val?.page ?? 1,
+      perPage: val?.perPage ?? 10,
+    });
+    const res = await axios.get("/api/v1/todo", { params });
     if (res?.data?.success) {
-      setData(res?.data?.data?.rows ?? []);
+      setRecord(res?.data?.data ?? []);
     }
     setLoading(false);
   };
@@ -33,6 +39,7 @@ const App: FC = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   const openModal = (data?: DataProps) => {
     setModal(() => ({ isOpen: true, data }));
   };
@@ -71,11 +78,12 @@ const App: FC = () => {
       )}
       <TodoList
         loading={loading}
-        data={data}
+        data={record}
         onAdd={openModal}
         onEdit={openModal}
         onDelete={handleDelete}
         onStatusChange={handleSave}
+        fetchData={fetchData}
       />
     </div>
   );
