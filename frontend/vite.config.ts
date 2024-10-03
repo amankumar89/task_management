@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://todo-app-black-mu.vercel.app",
+        target: "http://localhost:5001",
       },
     },
   },
