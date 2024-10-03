@@ -25,24 +25,29 @@ const App: FC = () => {
 
   const fetchData = async (val?: any) => {
     setLoading(true);
-    const params = new URLSearchParams({
-      page: val?.page ?? 1,
-      perPage: val?.perPage ?? 10,
-    });
-    if (val?.searchText) {
-      params.append("title", val?.searchText);
+    try {
+      const params = new URLSearchParams({
+        page: val?.page ?? 1,
+        perPage: val?.perPage ?? 10,
+      });
+      if (val?.searchText) {
+        params.append("title", val?.searchText);
+      }
+      if (val?.category) {
+        params.append("category", val?.category);
+      }
+      if (val?.status) {
+        params.append("status", val?.status);
+      }
+      const res = await axios.get("/api/v1/todo", { params });
+      if (res?.data?.success) {
+        setRecord(res?.data?.data ?? []);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    if (val?.category) {
-      params.append("category", val?.category);
-    }
-    if (val?.status) {
-      params.append("status", val?.status);
-    }
-    const res = await axios.get("/api/v1/todo", { params });
-    if (res?.data?.success) {
-      setRecord(res?.data?.data ?? []);
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -58,19 +63,28 @@ const App: FC = () => {
   };
 
   const handleSave = async (data: DataProps) => {
-    const res = data?.id
-      ? await axios.put(`/api/v1/todo/${data?.id}`, data)
-      : await axios.post("/api/v1/todo", data);
-    if (res?.data?.success) {
-      fetchData();
+    try {
+      const res = data?.id
+        ? await axios.put(`/api/v1/todo/${data?.id}`, data)
+        : await axios.post("/api/v1/todo", data);
+      if (res?.data?.success) {
+        fetchData();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      closeModal();
     }
-    closeModal();
   };
 
   const handleDelete = async (data: DataProps) => {
-    const res = await axios.delete(`/api/v1/todo/${data?.id}`);
-    if (res?.data?.success) {
-      fetchData();
+    try {
+      const res = await axios.delete(`/api/v1/todo/${data?.id}`);
+      if (res?.data?.success) {
+        fetchData();
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
