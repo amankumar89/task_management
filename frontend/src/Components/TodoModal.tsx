@@ -54,7 +54,7 @@ const TodoModal: FC<TodoModalProps> = ({
       form.setFieldsValue({
         ...INITIAL_VALUES,
         ...(data ?? {}),
-        date: dayjs(data?.date)?.format("DD-MM-YYYY"),
+        date: data?.date ? dayjs(data?.date) : "",
       });
     } else {
       form.resetFields();
@@ -64,7 +64,6 @@ const TodoModal: FC<TodoModalProps> = ({
   const onFinish = (values: DataProps) => {
     onSave({
       ...values,
-      date: dayjs(values?.date)?.format("YYYY-MM-DD"),
       isCompleted: false,
       id: data?.id ?? null,
     });
