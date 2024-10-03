@@ -1,7 +1,7 @@
 # ToDo App
 
 A Todo application built with the MERN stack (MongoDB, Express, React, Node.js) and deployed on Vercel. This app allows users to manage their tasks efficiently with a user-friendly interface.
-- [Vercel Server 1](https://todo-app-snowy-theta-63.vercel.app)
+- [OnRender Server 1](https://todo-app-r2fc.onrender.com)
 ## Features
 
 - **RESTful APIs**:
@@ -29,7 +29,7 @@ A Todo application built with the MERN stack (MongoDB, Express, React, Node.js) 
   - MongoDB
 
 - **Deployment**:
-  - Vercel
+  - OnRender
 
 ## Installation
 
