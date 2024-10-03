@@ -27,13 +27,19 @@ export type TodoListProps = {
   data: RecordProps;
   onAdd: () => void;
   onEdit: (data: DataProps) => void;
-  onDelete: (data: DataProps) => void;
-  onStatusChange: (data: DataProps) => void;
-  fetchData: (val: any) => void;
+  fetchData: (val: FetchDataProps) => void;
 };
 
 export type TodoModalProps = ModalProps & {
   open: boolean;
   data?: DataProps;
   onSave: (data: DataProps) => void;
+};
+
+export type FetchDataProps = {
+  page?: number;
+  perPage?: number;
+  searchText?: string;
+  category?: string;
+  status?: string;
 };

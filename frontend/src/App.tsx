@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import TodoList from "./Components/TodoList";
 import TodoModal from "./Components/TodoModal";
-import { DataProps, ModalsProps, RecordProps } from "./types";
+import { DataProps, FetchDataProps, ModalsProps, RecordProps } from "./types";
 import axios from "axios";
+import { message } from "antd";
 
 const INITIAL_MODAL = {
   isOpen: false,
@@ -23,12 +24,12 @@ const App: FC = () => {
   const [modal, setModal] = useState<ModalsProps>(INITIAL_MODAL);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchData = async (val?: any) => {
+  const fetchData = async (val?: FetchDataProps) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        page: val?.page ?? 1,
-        perPage: val?.perPage ?? 10,
+        page: (val?.page ?? 1)?.toString(),
+        perPage: (val?.perPage ?? 10).toString(),
       });
       if (val?.searchText) {
         params.append("title", val?.searchText);
@@ -43,8 +44,8 @@ const App: FC = () => {
       if (res?.data?.success) {
         setRecord(res?.data?.data ?? []);
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
+      message.error("Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -68,23 +69,15 @@ const App: FC = () => {
         ? await axios.put(`/api/v1/todo/${data?.id}`, data)
         : await axios.post("/api/v1/todo", data);
       if (res?.data?.success) {
+        message.success(
+          `Task ${data?.id ? "updated" : "created"} successfully`
+        );
         fetchData();
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
+      message.error(`Failed to ${data?.id ? "update" : "create"} task`);
     } finally {
       closeModal();
-    }
-  };
-
-  const handleDelete = async (data: DataProps) => {
-    try {
-      const res = await axios.delete(`/api/v1/todo/${data?.id}`);
-      if (res?.data?.success) {
-        fetchData();
-      }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -104,8 +97,6 @@ const App: FC = () => {
         data={record}
         onAdd={openModal}
         onEdit={openModal}
-        onDelete={handleDelete}
-        onStatusChange={handleSave}
         fetchData={fetchData}
       />
     </div>

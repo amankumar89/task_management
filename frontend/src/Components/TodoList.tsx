@@ -8,31 +8,29 @@ import {
   TableColumnProps,
   Button,
   Switch,
-  Row,
-  Col,
   Select,
+  message,
+  TablePaginationConfig,
 } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { DataProps, TodoListProps } from "../types";
 import dayjs from "dayjs";
-type PaginationProps = {
-  pageSize: number;
-  current: number;
-  total: number;
-};
+import axios from "axios";
 
-const COLORS: any = {
+const COLORS: { [key: string]: string } = {
   Work: "#1890ff",
-  "Personal Development": "#2db7f5",
+  Personal: "#2db7f5",
   Fitness: "#87d068",
-  "Household Chores": "#faad14",
+  Household: "#faad14",
   Social: "#f50",
-  "Finance & Budgeting": "#722ed1",
+  Finance: "#722ed1",
+  Budgeting: "#722ed1",
   Hobbies: "#13c2c2",
-  "Self-care": "#eb2f96",
+  "Self Care": "#eb2f96",
   Errands: "#fa8c16",
   Shopping: "#52c41a",
-  "Travel & Planning": "#1890ff",
+  Planning: "#1890ff",
+  Travel: "#1890ff",
   Learning: "#fadb14",
   Health: "#73d13d",
   Other: "#bfbfbf",
@@ -49,15 +47,45 @@ const TodoList: FC<TodoListProps> = ({
   data,
   onAdd,
   onEdit,
-  onDelete,
-  onStatusChange,
   fetchData,
 }) => {
-  const [pagination, setPagination] = useState<PaginationProps>({
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
     pageSize: 10,
     current: 1,
     total: data?.meta?.total ?? 0,
   });
+
+  const statusToggle = async (data: DataProps) => {
+    if (!data?.id) return;
+    try {
+      const res = await axios.put(`/api/v1/todo/${data?.id}`, data);
+      if (res?.data?.success) {
+        message.success("Task status updated successfully");
+        fetchData({
+          page: pagination?.current,
+          perPage: pagination?.pageSize,
+        });
+      }
+    } catch {
+      message.error("Failed to update task status");
+    }
+  };
+
+  const handleDelete = async (data: DataProps) => {
+    if (!data?.id) return;
+    try {
+      const res = await axios.delete(`/api/v1/todo/${data?.id}`);
+      if (res?.data?.success) {
+        message.success("Task deleted successfully");
+        fetchData({
+          page: pagination?.current,
+          perPage: pagination?.pageSize,
+        });
+      }
+    } catch {
+      message.error("Failed to delete task");
+    }
+  };
 
   const columns: TableColumnProps<DataProps>[] = [
     {
@@ -75,7 +103,7 @@ const TodoList: FC<TodoListProps> = ({
       dataIndex: "date",
       align: "center",
       key: "date",
-      render: (text: string) => (text ? dayjs(text).format("YYYY-MM-DD") : "-"),
+      render: (text: string) => (text ? dayjs(text).format("DD-MM-YYYY") : "-"),
     },
     {
       title: "Category",
@@ -94,7 +122,7 @@ const TodoList: FC<TodoListProps> = ({
       render: (value: boolean, record: DataProps) => (
         <Switch
           checked={value}
-          onClick={() => onStatusChange({ ...record, isCompleted: !value })}
+          onClick={() => statusToggle({ ...record, isCompleted: !value })}
         />
       ),
     },
@@ -117,7 +145,7 @@ const TodoList: FC<TodoListProps> = ({
           <button
             type="button"
             className="py-2 px-3 rounded hover:bg-red-100"
-            onClick={() => onDelete(record)}
+            onClick={() => handleDelete(record)}
           >
             <Tooltip title="Delete">
               <DeleteOutlined style={{ color: "red", fontSize: 18 }} />
@@ -132,7 +160,7 @@ const TodoList: FC<TodoListProps> = ({
     ...new Set(data?.rows?.map((item) => item?.category)),
   ]);
 
-  const handleTableChange = (pagination: any) => {
+  const handleTableChange = (pagination: TablePaginationConfig) => {
     setPagination(pagination);
     fetchData({
       page: pagination?.current,
@@ -144,58 +172,56 @@ const TodoList: FC<TodoListProps> = ({
     <div className="w-full p-4">
       <Table
         title={() => (
-          <Row align="middle" justify="space-between">
-            <Col span={8}>
-              <Input.Search
-                onSearch={(val) =>
-                  fetchData({
-                    searchText: val,
-                  })
-                }
-                placeholder="Search task..."
-                className=""
-                allowClear
-              />
-            </Col>
-            <Col span={4}>
-              <Select
-                options={categoryOptions}
-                placeholder="Filter by Category"
-                className="w-full"
-                allowClear
-                onSelect={(val) => {
-                  fetchData({
-                    category: val,
-                  });
-                }}
-                onClear={() => {
-                  fetchData({});
-                }}
-              />
-            </Col>
-            <Col span={4}>
-              <Select
-                options={formatOptions(["Completed", "Incomplete"])}
-                placeholder="Filter by Status"
-                className="w-full"
-                allowClear
-                onSelect={(val) => {
-                  fetchData({
-                    status: val,
-                  });
-                }}
-                onClear={() => {
-                  fetchData({});
-                }}
-              />
-            </Col>
-            <Col>
-              <Button type="primary" onClick={() => onAdd()}>
-                <span>Add Task</span>
-                <PlusOutlined />
-              </Button>
-            </Col>
-          </Row>
+          <Flex wrap gap={16} align="center">
+            <Input.Search
+              onSearch={(val) =>
+                fetchData({
+                  searchText: val,
+                  page: pagination?.current,
+                  perPage: pagination?.pageSize,
+                })
+              }
+              placeholder="Search task..."
+              className="xs:w-full lg:w-1/3"
+              allowClear
+            />
+            <Select
+              options={categoryOptions}
+              placeholder="Filter by Category"
+              allowClear
+              onSelect={(val) => {
+                fetchData({
+                  category: val,
+                });
+              }}
+              onClear={() => {
+                fetchData({});
+              }}
+              className="xs:w-full lg:w-[200px] mx-auto"
+            />
+            <Select
+              options={formatOptions(["Completed", "Incomplete"])}
+              placeholder="Filter by Status"
+              allowClear
+              onSelect={(val) => {
+                fetchData({
+                  status: val,
+                });
+              }}
+              onClear={() => {
+                fetchData({});
+              }}
+              className="xs:w-full lg:w-[150px] mx-auto"
+            />
+            <Button
+              className="xs:w-full lg:w-[150px] mx-auto"
+              type="primary"
+              onClick={() => onAdd()}
+            >
+              <span>Add Task</span>
+              <PlusOutlined />
+            </Button>
+          </Flex>
         )}
         columns={columns}
         dataSource={data?.rows}
@@ -207,6 +233,9 @@ const TodoList: FC<TodoListProps> = ({
         }}
         loading={loading}
         onChange={handleTableChange}
+        style={{
+          width: "100%",
+        }}
       />
     </div>
   );

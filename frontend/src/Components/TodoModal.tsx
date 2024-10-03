@@ -15,16 +15,18 @@ import { DataProps, TodoModalProps } from "../types";
 
 const CATEGORY_LISTS = [
   { value: "Work", label: "Work" },
-  { value: "Personal Development", label: "Personal Development" },
+  { value: "Personal", label: "Personal" },
   { value: "Fitness", label: "Fitness" },
-  { value: "Household Chores", label: "Household Chores" },
+  { value: "Household", label: "Household" },
   { value: "Social", label: "Social" },
-  { value: "Finance", label: "Finance & Budgeting" },
+  { value: "Finance", label: "Finance" },
+  { value: "Budgeting", label: "Budgeting" },
   { value: "Hobbies", label: "Hobbies" },
-  { value: "Self Care", label: "Self-care" },
+  { value: "Self Care", label: "Self Care" },
   { value: "Errands", label: "Errands" },
   { value: "Shopping", label: "Shopping" },
-  { value: "Travel", label: "Travel & Planning" },
+  { value: "Travel", label: "Travel" },
+  { value: "Planning", label: "Planning" },
   { value: "Learning", label: "Learning" },
   { value: "Health", label: "Health" },
   { value: "Other", label: "Other" },
@@ -52,7 +54,7 @@ const TodoModal: FC<TodoModalProps> = ({
       form.setFieldsValue({
         ...INITIAL_VALUES,
         ...(data ?? {}),
-        date: dayjs(data?.date),
+        date: dayjs(data?.date)?.format("DD-MM-YYYY"),
       });
     } else {
       form.resetFields();
@@ -132,7 +134,7 @@ const TodoModal: FC<TodoModalProps> = ({
             },
           ]}
         >
-          <DatePicker style={{ width: "100%" }} />
+          <DatePicker format="DD-MM-YYYY" style={{ width: "100%" }} />
         </Form.Item>
         <Divider />
         <Flex gap={8} justify="flex-end" align="center">
