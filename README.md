@@ -1,4 +1,4 @@
-# ToDo App
+# Task Management App
 
 A Todo application built with the MERN stack (MongoDB, Express, React, Node.js) and deployed on Vercel. This app allows users to manage their tasks efficiently with a user-friendly interface.
 - [OnRender Server 1](https://todo-app-r2fc.onrender.com)
