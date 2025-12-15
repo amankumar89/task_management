@@ -15,7 +15,16 @@ import todoRoutes from "./routes/todo.route.js";
 app.set("trust proxy", true);
 
 // Enable CORS
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5001",
+      "https://task-management-phi-three.vercel.app",
+      "https://task-management-git-main-amankumar89s-projects.vercel.app",
+      "https://task-management-5a1uaxxhc-amankumar89s-projects.vercel.app",
+    ],
+  })
+);
 
 app.use(express.static(path.join(path.resolve(), "frontend/dist")));
 
