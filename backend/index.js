@@ -6,7 +6,7 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5001;
 
 import { connectDB } from "./config/mongoose.js";
 
