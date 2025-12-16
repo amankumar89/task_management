@@ -2,12 +2,11 @@
   "name": "todo_app",
   "version": "1.0.0",
   "description": "todo app using nodejs, express and mongodb and ejs as view engine",
-  "main": "backend/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development nodemon index.js",
-    "start": "NODE_ENV=production node backend/index.js",
-    "build": "npm i && npm i --prefix frontend && npm run build --prefix frontend"
+    "start": "NODE_ENV=production node index.js"
   },
   "author": "Aman Kumar",
   "license": "ISC",
