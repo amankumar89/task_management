@@ -24,14 +24,14 @@ app.use(express.static(path.join(path.resolve(), "frontend/dist")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", (req, res) => {
+app.use("/api/v1/todo", todoRoutes);
+
+app.use("*", (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Server is healthy & running...",
   });
 });
-
-app.use("/api/v1/todo", todoRoutes);
 
 export default app;
 
