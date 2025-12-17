@@ -4,6 +4,7 @@ import TodoModal from "./Components/TodoModal";
 import { DataProps, FetchDataProps, ModalsProps, RecordProps } from "./types";
 import axios from "axios";
 import { message } from "antd";
+import { generateUrl } from "./utils";
 
 const INITIAL_MODAL = {
   isOpen: false,
@@ -40,7 +41,7 @@ const App: FC = () => {
       if (val?.status) {
         params.append("status", val?.status);
       }
-      const res = await axios.get("/api/v1/todo", { params });
+      const res = await axios.get(generateUrl("/api/v1/todo"), { params });
       if (res?.data?.success) {
         setRecord(res?.data?.data ?? []);
       }
@@ -66,8 +67,8 @@ const App: FC = () => {
   const handleSave = async (data: DataProps) => {
     try {
       const res = data?.id
-        ? await axios.put(`/api/v1/todo/${data?.id}`, data)
-        : await axios.post("/api/v1/todo", data);
+        ? await axios.put(generateUrl(`/api/v1/todo/${data?.id}`), data)
+        : await axios.post(generateUrl("/api/v1/todo"), data);
       if (res?.data?.success) {
         message.success(
           `Task ${data?.id ? "updated" : "created"} successfully`

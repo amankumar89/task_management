@@ -16,6 +16,7 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { DataProps, TodoListProps } from "../types";
 import dayjs from "dayjs";
 import axios from "axios";
+import { generateUrl } from "../utils";
 
 const COLORS: { [key: string]: string } = {
   Work: "#1890ff",
@@ -58,7 +59,10 @@ const TodoList: FC<TodoListProps> = ({
   const statusToggle = async (data: DataProps) => {
     if (!data?.id) return;
     try {
-      const res = await axios.put(`/api/v1/todo/${data?.id}`, data);
+      const res = await axios.put(
+        generateUrl(`/api/v1/todo/${data?.id}`),
+        data
+      );
       if (res?.data?.success) {
         message.success("Task status updated successfully");
         fetchData({
@@ -74,7 +78,7 @@ const TodoList: FC<TodoListProps> = ({
   const handleDelete = async (data: DataProps) => {
     if (!data?.id) return;
     try {
-      const res = await axios.delete(`/api/v1/todo/${data?.id}`);
+      const res = await axios.delete(generateUrl(`/api/v1/todo/${data?.id}`));
       if (res?.data?.success) {
         message.success("Task deleted successfully");
         fetchData({
