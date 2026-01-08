@@ -2,7 +2,7 @@
 
 A minimal Todo application with a Node.js + Express backend (MongoDB/Mongoose) and a React + Vite (TypeScript) frontend.
 
-[Live Demo (Render)](https://todo-app-r2fc.onrender.com)
+[Live Demo (Vercel)](https://task-management-orpin-seven.vercel.app)
 
 ---
 
@@ -27,7 +27,7 @@ This project is a simple task management application (create, update, delete, se
 ---
 
 ## Demo
-Live demo: https://todo-app-r2fc.onrender.com
+Live demo: https://task-management-orpin-seven.vercel.app/
 
 ---
 
