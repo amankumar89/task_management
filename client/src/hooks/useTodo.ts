@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from './useApi';
-import { toast } from 'sonner';
 import type { Task } from '@/types';
+import toast from 'react-hot-toast';
 
 interface RecordProps {
   meta: {
@@ -24,12 +24,13 @@ export const useTodo = () => {
 
   const fetchData = async (params?: {
     page?: number;
-    perPage: number;
+    perPage?: number;
     title?: string;
     category?: string;
-    status?: boolean
+    status?: string;
   }) => {
     setLoading(true);
+    if(params?.category === "All") params.category = undefined;
     try {
       const res = await api.get('/api/v1/todo', params);
       if (res?.success) {
@@ -47,6 +48,7 @@ export const useTodo = () => {
         : await api.post('/api/v1/todo', data);
       
       if (res?.success) {
+        //
         toast.success(`Task ${data?.id ? 'updated' : 'created'} successfully`);
         fetchData();
       }
@@ -56,7 +58,7 @@ export const useTodo = () => {
     }
   };
 
-  const deleteTodo = async (id: string) => {
+  const deleteTodo = async (id: number) => {
     try {
       const res = await api.delete(`/api/v1/todo/${id}`);
       if (res?.success) {
@@ -65,7 +67,7 @@ export const useTodo = () => {
       }
     } catch (error) {
         console.error(error);
-        toast.error("Failed to delete.");
+        toast.error("Failed to delete task.");
     }
   };
 

@@ -14,7 +14,7 @@ interface FormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> 
 
 const FormSelect: React.FC<FormSelectProps> = ({ label, error, isDark, options, ...props }) => {
     return (
-        <div className="mb-4">
+        <div className="">
             <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'
                 }`}>
                 {label}

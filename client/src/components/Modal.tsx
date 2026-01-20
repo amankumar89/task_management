@@ -20,7 +20,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, isDark 
 
             <div className={`relative w-full max-w-xl rounded-2xl shadow-2xl transition-colors ${isDark ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200'
                 }`}>
-                <div className={`flex items-center justify-between p-6 border-b ${isDark ? 'border-slate-700' : 'border-gray-200'
+                <div className={`flex items-center justify-between p-4 px-6 border-b ${isDark ? 'border-slate-700' : 'border-gray-200'
                     }`}>
                     <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         {title}

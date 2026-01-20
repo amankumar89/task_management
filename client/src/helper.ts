@@ -16,3 +16,9 @@ export const CATEGORY_LISTS = [
   { value: "Health", label: "Health" },
   { value: "Other", label: "Other" },
 ];
+
+export const formatOptions = (data: string[]) =>
+  data?.map((i) => ({
+    value: i,
+    label: i,
+  }));

@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import type { Task, TaskFormData, ToastMessage, ToastType } from "./types";
+import type { Task, TaskFormData } from "./types";
 import Navbar from "./components/Navbar";
 import { Plus } from "lucide-react";
 import TaskCard from "./components/TaskCard";
 import Modal from "./components/Modal";
 import TaskForm from "./components/TaskForm";
-import Toast from "./components/Toast";
 import { useTodo } from "./hooks/useTodo";
 import Pagination from "./components/Pagination";
+import FormSelect from "./components/FormSelect";
+import { formatOptions } from "./helper";
 
 const App: React.FC = () => {
   const {
-    loading,
+    // loading,
     records,
     saveTodo,
     fetchData,
@@ -19,10 +20,8 @@ const App: React.FC = () => {
   } = useTodo();
 
   const [isDark, setIsDark] = useState<boolean>(true);
-  // const [tasks, setTasks] = useState<Task[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [toast, setToast] = useState<ToastMessage | null>(null);
   const [pagination, setPagination] = useState({
     current: 1,
     perPage: 12,
@@ -36,34 +35,20 @@ const App: React.FC = () => {
     });
   }, [])
 
-  const showToast = (message: string, type: ToastType = 'success') => {
-    setToast({ message, type });
-  };
-
-  const handleCreateTask = (taskData: TaskFormData) => {
-    const newTask: Task = {
-      id: Date.now(),
-      ...taskData
-    };
-    // setTasks(prev => [newTask, ...prev]);
+  const handleCreateTask = async (taskData: TaskFormData) => {
+    await saveTodo(taskData);
     setModalOpen(false);
-    showToast('Task created successfully!', 'success');
   };
 
-  const handleUpdateTask = (taskData: TaskFormData) => {
+  const handleUpdateTask = async (taskData: TaskFormData) => {
     if (!editingTask) return;
-
-    // setTasks(prev => prev.map(t =>
-    //   t.id === editingTask.id ? { ...t, ...taskData } : t
-    // ));
+    await saveTodo(taskData)
     setModalOpen(false);
     setEditingTask(null);
-    showToast('Task updated successfully!', 'success');
   };
 
-  const handleDeleteTask = (id: number) => {
-    // setTasks(prev => prev.filter(t => t.id !== id));
-    showToast('Task deleted successfully!', 'info');
+  const handleDeleteTask = async (id: number) => {
+    await deleteTodo(id);
   };
 
   const openEditModal = (task: Task) => {
@@ -94,9 +79,14 @@ const App: React.FC = () => {
     setPagination((prev) => ({
       ...prev,
       current: page,
-    }))
+    }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const categoryOptions = formatOptions([
+    "All",
+    ...new Set(records?.rows?.map((item) => item?.category) ?? []),
+  ]);
 
   return (
     <div className={`min-h-screen transition-colors ${isDark
@@ -107,24 +97,37 @@ const App: React.FC = () => {
       <Navbar isDark={isDark} toggleTheme={() => setIsDark(prev => !prev)} />
 
       {/* Cards */}
-      <div className="max-w-8xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              My Tasks
-            </h2>
-            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-              {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'} in total
-            </p>
+      <div className="max-w-8xl mx-auto p-6">
+        <div className="flex items-center justify-between mb-6">
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            {records?.meta.total} {records.meta.total === 1 ? 'task' : 'tasks'} in total
+          </p>
+
+          <div className="flex flex-wrap items-center justify-end gap-6">
+
+            <FormSelect
+              label=""
+              options={categoryOptions}
+              isDark={isDark}
+              onChange={(e) => fetchData({ category: e?.target?.value })}
+            />
+
+            <FormSelect
+              label=""
+              options={formatOptions(["All", "Completed", "Incomplete"])}
+              isDark={isDark}
+              onChange={(e) => fetchData({ status: e?.target?.value })}
+
+            />
+            <button
+              onClick={openCreateModal}
+              className="flex items-center gap-2 px-4 py-2 bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40"
+            >
+              <Plus className="w-6 h-6" />
+              New Task
+            </button>
           </div>
 
-          <button
-            onClick={openCreateModal}
-            className="flex items-center gap-2 px-5 py-3 bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40"
-          >
-            <Plus className="w-5 h-5" />
-            New Task
-          </button>
         </div>
 
         {/* Card List */}
@@ -151,7 +154,7 @@ const App: React.FC = () => {
           />
         </div>
 
-        {tasks.length === 0 && (
+        {tasks?.length === 0 && (
           <div className={`text-center py-16 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
             <p className="text-lg">No tasks yet. Create your first task to get started!</p>
           </div>
@@ -172,15 +175,6 @@ const App: React.FC = () => {
           isDark={isDark}
         />
       </Modal>
-
-      {/* Toast Message */}
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 };
