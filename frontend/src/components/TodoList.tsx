@@ -218,7 +218,7 @@ const TodoList: FC<TodoListProps> = ({
               className="xs:w-full lg:w-[150px] mx-auto"
             />
             <Button
-              className="xs:w-full lg:w-[150px] mx-auto"
+              className="xs:w-full mx-auto flex items-center justify-center"
               type="primary"
               onClick={() => onAdd()}
             >

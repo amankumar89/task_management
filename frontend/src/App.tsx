@@ -1,10 +1,12 @@
 import { FC, useEffect, useState } from "react";
-import TodoList from "./Components/TodoList";
-import TodoModal from "./Components/TodoModal";
+import TodoList from "./components/TodoList";
+import TodoModal from "./components/TodoModal";
 import { DataProps, FetchDataProps, ModalsProps, RecordProps } from "./types";
 import axios from "axios";
 import { message } from "antd";
 import { generateUrl } from "./utils";
+import Navbar from "./components/Navbar";
+// import Card from "./components/Card";
 
 const INITIAL_MODAL = {
   isOpen: false,
@@ -83,24 +85,28 @@ const App: FC = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex justify-center">
-      {modal?.isOpen && (
-        <TodoModal
-          open={modal?.isOpen}
-          data={modal?.data}
-          onCancel={closeModal}
-          onSave={handleSave}
-          width={650}
+    <main>
+      <Navbar />
+      {/* <Card /> */}
+      <div className="w-screen h-screen flex justify-center">
+        {modal?.isOpen && (
+          <TodoModal
+            open={modal?.isOpen}
+            data={modal?.data}
+            onCancel={closeModal}
+            onSave={handleSave}
+            width={650}
+          />
+        )}
+        <TodoList
+          loading={loading}
+          data={record}
+          onAdd={openModal}
+          onEdit={openModal}
+          fetchData={fetchData}
         />
-      )}
-      <TodoList
-        loading={loading}
-        data={record}
-        onAdd={openModal}
-        onEdit={openModal}
-        fetchData={fetchData}
-      />
-    </div>
+      </div>
+    </main>
   );
 };
 
