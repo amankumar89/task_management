@@ -1,112 +1,181 @@
-import { FC, useEffect, useState } from "react";
-import TodoList from "./components/TodoList";
-import TodoModal from "./components/TodoModal";
-import { DataProps, FetchDataProps, ModalsProps, RecordProps } from "./types";
-import axios from "axios";
-import { message } from "antd";
-import { generateUrl } from "./utils";
+import { useEffect, useState } from "react";
+import type { Task, TaskFormData } from "./types";
 import Navbar from "./components/Navbar";
-// import Card from "./components/Card";
+import { Plus } from "lucide-react";
+import TaskCard from "./components/TaskCard";
+import Modal from "./components/Modal";
+import TaskForm from "./components/TaskForm";
+import { useTodo } from "./hooks/useTodo";
+import Pagination from "./components/Pagination";
+import FormSelect from "./components/FormSelect";
+import { formatOptions } from "./helper";
 
-const INITIAL_MODAL = {
-  isOpen: false,
-  data: {
-    id: null,
-    title: "",
-    description: "",
-    date: "",
-    category: "",
-    isCompleted: false,
-  },
-};
+const App: React.FC = () => {
+  const {
+    // loading,
+    records,
+    saveTodo,
+    fetchData,
+    deleteTodo,
+  } = useTodo();
 
-const App: FC = () => {
-  const [record, setRecord] = useState<RecordProps>({
-    rows: [],
-  });
-  const [modal, setModal] = useState<ModalsProps>(INITIAL_MODAL);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const fetchData = async (val?: FetchDataProps) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        page: (val?.page ?? 1)?.toString(),
-        perPage: (val?.perPage ?? 10).toString(),
-      });
-      if (val?.searchText) {
-        params.append("title", val?.searchText);
-      }
-      if (val?.category) {
-        params.append("category", val?.category);
-      }
-      if (val?.status) {
-        params.append("status", val?.status);
-      }
-      const res = await axios.get(generateUrl("/api/v1/todo"), { params });
-      if (res?.data?.success) {
-        setRecord(res?.data?.data ?? []);
-      }
-    } catch {
-      message.error("Failed to fetch data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [isDark, setIsDark] = useState<boolean>(true);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    perPage: 12,
+    total: 0,
+  })
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData({
+      page: pagination.current,
+      perPage: pagination.perPage,
+    });
+  }, [])
 
-  const openModal = (data?: DataProps) => {
-    setModal(() => ({ isOpen: true, data }));
+  const handleCreateTask = async (taskData: TaskFormData) => {
+    await saveTodo(taskData);
+    setModalOpen(false);
+  };
+
+  const handleUpdateTask = async (taskData: TaskFormData) => {
+    if (!editingTask) return;
+    await saveTodo(taskData)
+    setModalOpen(false);
+    setEditingTask(null);
+  };
+
+  const handleDeleteTask = async (id: number) => {
+    await deleteTodo(id);
+  };
+
+  const openEditModal = (task: Task) => {
+    setEditingTask(task);
+    setModalOpen(true);
+  };
+
+  const openCreateModal = () => {
+    setEditingTask(null);
+    setModalOpen(true);
   };
 
   const closeModal = () => {
-    setModal(INITIAL_MODAL);
+    setModalOpen(false);
+    setEditingTask(null);
   };
 
-  const handleSave = async (data: DataProps) => {
-    try {
-      const res = data?.id
-        ? await axios.put(generateUrl(`/api/v1/todo/${data?.id}`), data)
-        : await axios.post(generateUrl("/api/v1/todo"), data);
-      if (res?.data?.success) {
-        message.success(
-          `Task ${data?.id ? "updated" : "created"} successfully`
-        );
-        fetchData();
-      }
-    } catch {
-      message.error(`Failed to ${data?.id ? "update" : "create"} task`);
-    } finally {
-      closeModal();
-    }
+  const tasks = records?.rows.map((item: any) => ({
+    ...item,
+    status: item?.isCompleted ? "COMPLETED" : "STARTED",
+  })) ?? [];
+
+  const handlePageChange = (page: number) => {
+    fetchData({
+      page,
+      perPage: pagination.perPage,
+    })
+    setPagination((prev) => ({
+      ...prev,
+      current: page,
+    }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const categoryOptions = formatOptions([
+    "All",
+    ...new Set(records?.rows?.map((item) => item?.category) ?? []),
+  ]);
 
   return (
-    <main>
-      <Navbar />
-      {/* <Card /> */}
-      <div className="w-screen h-screen flex justify-center">
-        {modal?.isOpen && (
-          <TodoModal
-            open={modal?.isOpen}
-            data={modal?.data}
-            onCancel={closeModal}
-            onSave={handleSave}
-            width={650}
+    <div className={`min-h-screen transition-colors ${isDark
+      ? 'bg-linear-to-br from-slate-950 via-slate-900 to-slate-950'
+      : 'bg-linear-to-br from-gray-50 via-white to-gray-50'
+      }`}>
+      {/* Navbar */}
+      <Navbar isDark={isDark} toggleTheme={() => setIsDark(prev => !prev)} />
+
+      {/* Cards */}
+      <div className="max-w-8xl mx-auto p-6">
+        <div className="flex items-center justify-between mb-6">
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            {records?.meta.total} {records.meta.total === 1 ? 'task' : 'tasks'} in total
+          </p>
+
+          <div className="flex flex-wrap items-center justify-end gap-6">
+
+            <FormSelect
+              label=""
+              options={categoryOptions}
+              isDark={isDark}
+              onChange={(e) => fetchData({ category: e?.target?.value })}
+            />
+
+            <FormSelect
+              label=""
+              options={formatOptions(["All", "Completed", "Incomplete"])}
+              isDark={isDark}
+              onChange={(e) => fetchData({ status: e?.target?.value })}
+
+            />
+            <button
+              onClick={openCreateModal}
+              className="flex items-center gap-2 px-4 py-2 bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40"
+            >
+              <Plus className="w-6 h-6" />
+              New Task
+            </button>
+          </div>
+
+        </div>
+
+        {/* Card List */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tasks?.map(task => (
+            <TaskCard
+              key={task?.id}
+              task={task}
+              onEdit={openEditModal}
+              onDelete={handleDeleteTask}
+              isDark={isDark}
+            />
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center">
+          <Pagination
+            currentPage={pagination.current}
+            perPage={pagination.perPage}
+            total={records.meta.total}
+            onPageChange={handlePageChange}
+            isDark={isDark}
           />
+        </div>
+
+        {tasks?.length === 0 && (
+          <div className={`text-center py-16 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            <p className="text-lg">No tasks yet. Create your first task to get started!</p>
+          </div>
         )}
-        <TodoList
-          loading={loading}
-          data={record}
-          onAdd={openModal}
-          onEdit={openModal}
-          fetchData={fetchData}
-        />
       </div>
-    </main>
+
+      {/* Create / Edit Task Modal */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title={editingTask ? 'Edit Task' : 'Create New Task'}
+        isDark={isDark}
+      >
+        <TaskForm
+          task={editingTask}
+          onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
+          onCancel={closeModal}
+          isDark={isDark}
+        />
+      </Modal>
+    </div>
   );
 };
 

@@ -1,45 +1,27 @@
-import { ModalProps } from "antd";
+import type { ReactNode } from "react";
 
-export type DataProps = {
-  id?: number | null;
+type TaskStatus = 'STARTED' | 'IN_PROGRESS' | 'COMPLETED';
+type TaskCategory = 'Work' | 'Personal' | 'Fitness' | 'Household' | 'Social' | 'Finance' | 'Budgeting' | 'Hobbies' | 'Self Care' | 'Errands' | 'Shopping' | 'Travel' | 'Planning' | 'Learning' | 'Health' | 'Other';
+
+interface Task {
+  id: number;
   title: string;
-  date: string;
-  category: string;
-  isCompleted?: boolean;
   description: string;
-};
+  date: string;
+  category: TaskCategory;
+  status: TaskStatus;
+}
 
-export type RecordProps = {
-  meta?: {
-    total: number;
-    page: number;
-  };
-  rows?: DataProps[];
-};
+interface TaskFormData {
+  title: string;
+  description: string;
+  date: string;
+  category: TaskCategory;
+  status: TaskStatus;
+}
 
-export type ModalsProps = {
-  isOpen: boolean;
-  data?: DataProps;
-};
-
-export type TodoListProps = {
-  loading?: boolean;
-  data: RecordProps;
-  onAdd: () => void;
-  onEdit: (data: DataProps) => void;
-  fetchData: (val: FetchDataProps) => void;
-};
-
-export type TodoModalProps = ModalProps & {
-  open: boolean;
-  data?: DataProps;
-  onSave: (data: DataProps) => void;
-};
-
-export type FetchDataProps = {
-  page?: number;
-  perPage?: number;
-  searchText?: string;
-  category?: string;
-  status?: string;
-};
+interface FormErrors {
+  title?: string;
+  description?: string;
+  date?: string;
+}
