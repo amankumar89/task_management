@@ -1,0 +1,24 @@
+export const CATEGORY_LISTS = [
+  { value: "Work", label: "Work" },
+  { value: "Personal", label: "Personal" },
+  { value: "Fitness", label: "Fitness" },
+  { value: "Household", label: "Household" },
+  { value: "Social", label: "Social" },
+  { value: "Finance", label: "Finance" },
+  { value: "Budgeting", label: "Budgeting" },
+  { value: "Hobbies", label: "Hobbies" },
+  { value: "Self Care", label: "Self Care" },
+  { value: "Errands", label: "Errands" },
+  { value: "Shopping", label: "Shopping" },
+  { value: "Travel", label: "Travel" },
+  { value: "Planning", label: "Planning" },
+  { value: "Learning", label: "Learning" },
+  { value: "Health", label: "Health" },
+  { value: "Other", label: "Other" },
+];
+
+export const formatOptions = (data: string[]) =>
+  data?.map((i) => ({
+    value: i,
+    label: i,
+  }));
