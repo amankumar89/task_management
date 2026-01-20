@@ -9,10 +9,11 @@ import { useTodo } from "./hooks/useTodo";
 import Pagination from "./components/Pagination";
 import FormSelect from "./components/FormSelect";
 import { formatOptions } from "./helper";
+import Loader from "./components/Loader";
 
 const App: React.FC = () => {
   const {
-    // loading,
+    loading,
     records,
     saveTodo,
     fetchData,
@@ -130,6 +131,8 @@ const App: React.FC = () => {
 
         </div>
 
+        {loading ? <Loader /> : null}
+
         {/* Card List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tasks?.map(task => (
@@ -143,20 +146,22 @@ const App: React.FC = () => {
           ))}
         </div>
 
-        {/* Pagination */}
-        <div className="flex justify-center">
-          <Pagination
-            currentPage={pagination.current}
-            perPage={pagination.perPage}
-            total={records.meta.total}
-            onPageChange={handlePageChange}
-            isDark={isDark}
-          />
-        </div>
-
         {tasks?.length === 0 && (
           <div className={`text-center py-16 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
             <p className="text-lg">No tasks yet. Create your first task to get started!</p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {tasks.length > 0 && (
+          <div className="flex justify-center">
+            <Pagination
+              currentPage={pagination.current}
+              perPage={pagination.perPage}
+              total={records.meta.total}
+              onPageChange={handlePageChange}
+              isDark={isDark}
+            />
           </div>
         )}
       </div>
