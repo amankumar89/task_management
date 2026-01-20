@@ -146,7 +146,7 @@ const App: React.FC = () => {
           ))}
         </div>
 
-        {tasks?.length === 0 && (
+        {!loading && tasks?.length === 0 && (
           <div className={`text-center py-16 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
             <p className="text-lg">No tasks yet. Create your first task to get started!</p>
           </div>
