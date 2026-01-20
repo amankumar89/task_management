@@ -37,15 +37,15 @@ const App: React.FC = () => {
   }, [])
 
   const handleCreateTask = async (taskData: TaskFormData) => {
-    await saveTodo(taskData);
     setModalOpen(false);
+    await saveTodo(taskData);
   };
 
   const handleUpdateTask = async (taskData: TaskFormData) => {
     if (!editingTask) return;
-    await saveTodo(taskData)
     setModalOpen(false);
     setEditingTask(null);
+    await saveTodo(taskData)
   };
 
   const handleDeleteTask = async (id: number) => {
@@ -53,8 +53,8 @@ const App: React.FC = () => {
   };
 
   const openEditModal = (task: Task) => {
-    setEditingTask(task);
     setModalOpen(true);
+    setEditingTask(task);
   };
 
   const openCreateModal = () => {
