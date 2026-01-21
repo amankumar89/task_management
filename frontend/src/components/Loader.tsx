@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { Loader as Loader2 } from "lucide-react";
 
 const Loader = ({ show = true, text = "Loading..." }) => {
     if (!show) return null;

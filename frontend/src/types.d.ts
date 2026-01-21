@@ -13,6 +13,7 @@ interface Task {
 }
 
 interface TaskFormData {
+  id?: number | string;
   title: string;
   description: string;
   date: string;
