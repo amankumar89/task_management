@@ -194,9 +194,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, isDark }) =
                     <Pencil className="w-4 h-4" />
                     Edit
                 </button>
-
                 <button
-                    onClick={() => onDelete(task?.id)}
+                    onClick={() => task?.id && onDelete(Number(task.id))}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isDark
                         ? 'bg-slate-700/50 hover:bg-red-500/10 border border-slate-600 text-gray-300 hover:text-red-400 hover:border-red-500/50'
                         : 'bg-gray-50 hover:bg-red-50 border border-gray-200 text-gray-700 hover:text-red-600 hover:border-red-300'

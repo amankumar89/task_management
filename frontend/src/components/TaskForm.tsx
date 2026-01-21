@@ -5,7 +5,6 @@ import FormInput from "./FormInput";
 import { CATEGORY_LISTS } from "@/helper";
 import Loader from "./Loader";
 import { useTask } from "@/hooks/useTask";
-import toast from "react-hot-toast";
 
 interface TaskFormProps {
     task: Task | null;

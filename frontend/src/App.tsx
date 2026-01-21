@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ParamProps, Task } from "./types";
 import Navbar from "./components/Navbar";
 import { Plus } from "lucide-react";
@@ -10,7 +10,6 @@ import Pagination from "./components/Pagination";
 import FormSelect from "./components/FormSelect";
 import { formatOptions } from "./helper";
 import Loader from "./components/Loader";
-import toast from "react-hot-toast";
 
 const App: React.FC = () => {
 
