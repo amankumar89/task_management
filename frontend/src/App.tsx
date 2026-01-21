@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import type { Task, TaskFormData } from "./types";
+import { useEffect, useMemo, useState } from "react";
+import type { Task } from "./types";
 import Navbar from "./components/Navbar";
 import { Plus } from "lucide-react";
 import TaskCard from "./components/TaskCard";
@@ -15,7 +15,6 @@ const App: React.FC = () => {
   const {
     loading,
     records,
-    saveTodo,
     fetchData,
     deleteTodo,
   } = useTodo();
@@ -30,23 +29,8 @@ const App: React.FC = () => {
   })
 
   useEffect(() => {
-    fetchData({
-      page: pagination.current,
-      perPage: pagination.perPage,
-    });
-  }, [])
-
-  const handleCreateTask = async (taskData: TaskFormData) => {
-    setModalOpen(false);
-    await saveTodo(taskData);
-  };
-
-  const handleUpdateTask = async (taskData: TaskFormData) => {
-    if (!editingTask) return;
-    setModalOpen(false);
-    setEditingTask(null);
-    await saveTodo(taskData)
-  };
+    fetchData({ page: pagination.current });
+  }, []);
 
   const handleDeleteTask = async (id: number) => {
     await deleteTodo(id);
@@ -67,21 +51,20 @@ const App: React.FC = () => {
     setEditingTask(null);
   };
 
-  const tasks = records?.rows.map((item: any) => ({
-    ...item,
-    status: item?.isCompleted ? "COMPLETED" : "STARTED",
-  })) ?? [];
+  const tasks = useMemo(() => {
+    return records?.rows.map((item: any) => ({
+      ...item,
+      status: item?.isCompleted ? "COMPLETED" : "STARTED",
+    })) ?? []
+  }, [records.rows]);
 
   const handlePageChange = (page: number) => {
-    fetchData({
-      page,
-      perPage: pagination.perPage,
-    })
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setPagination((prev) => ({
       ...prev,
       current: page,
     }));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    fetchData({ page });
   };
 
   const categoryOptions = formatOptions([
@@ -175,7 +158,7 @@ const App: React.FC = () => {
       >
         <TaskForm
           task={editingTask}
-          onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
+          // onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
           onCancel={closeModal}
           isDark={isDark}
         />

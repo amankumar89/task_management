@@ -3,15 +3,21 @@ import FormSelect from "./FormSelect";
 import type { FormErrors, Task, TaskFormData } from "@/types";
 import FormInput from "./FormInput";
 import { CATEGORY_LISTS } from "@/helper";
+import Loader from "./Loader";
+import { useTodo } from "@/hooks/useTodo";
 
 interface TaskFormProps {
     task: Task | null;
-    onSubmit: (data: TaskFormData) => void;
+    // onSubmit: (data: TaskFormData) => void;
     onCancel: () => void;
     isDark: boolean;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel, isDark }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ task, onCancel, isDark }) => {
+    // hooks
+    const { loading, saveTodo } = useTodo();
+
+    // states
     const [formData, setFormData] = useState<TaskFormData>({
         title: task?.title || '',
         description: task?.description || '',
@@ -32,10 +38,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel, isDark })
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (validate()) {
-            onSubmit(formData);
+            await saveTodo(formData);
         }
+        onCancel();
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -48,6 +55,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel, isDark })
 
     return (
         <>
+            {loading ? <Loader /> : null}
             <FormInput
                 label="Title"
                 name="title"
@@ -116,7 +124,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit, onCancel, isDark })
                     onClick={handleSubmit}
                     className="flex-1 py-2.5 bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all"
                 >
-                    {task ? 'Update Task' : 'Create Task'}
+                    {task ? 'Update' : 'Create'}
                 </button>
                 <button
                     onClick={onCancel}
