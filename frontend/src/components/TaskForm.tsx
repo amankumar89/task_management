@@ -4,18 +4,18 @@ import type { FormErrors, Task, TaskFormData } from "@/types";
 import FormInput from "./FormInput";
 import { CATEGORY_LISTS } from "@/helper";
 import Loader from "./Loader";
-import { useTodo } from "@/hooks/useTodo";
+import { useTask } from "@/hooks/useTask";
+import toast from "react-hot-toast";
 
 interface TaskFormProps {
     task: Task | null;
-    // onSubmit: (data: TaskFormData) => void;
     onCancel: () => void;
     isDark: boolean;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ task, onCancel, isDark }) => {
     // hooks
-    const { loading, saveTodo } = useTodo();
+    const { isLoading, createTask, updateTask } = useTask();
 
     // states
     const [formData, setFormData] = useState<TaskFormData>({
@@ -40,7 +40,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onCancel, isDark }) => {
 
     const handleSubmit = async () => {
         if (validate()) {
-            await saveTodo(formData);
+            const res = formData?.id ? await updateTask(formData) : await createTask(formData);
+            console.log(res);
+
+            // if (res?.data?.success) {
+            //     toast.success(`Task ${formData?.id ? 'updated' : 'created'} successfully`);
+            // }
         }
         onCancel();
     };
@@ -55,7 +60,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onCancel, isDark }) => {
 
     return (
         <>
-            {loading ? <Loader /> : null}
+            {isLoading ? <Loader /> : null}
             <FormInput
                 label="Title"
                 name="title"
